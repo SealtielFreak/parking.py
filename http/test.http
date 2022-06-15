@@ -1,0 +1,10 @@
+POST http://localhost:8000/clients/
+Content-Type: application/json
+
+{
+  "message": "Testing!"
+}
+
+###
+GET http://localhost:8000/clients/
+
