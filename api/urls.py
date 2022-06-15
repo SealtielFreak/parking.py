@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import api.views
 
 urlpatterns = [
-    path('api/', include("api.urls")),
-    path('admin/', admin.site.urls),
+    path('clients/', api.views.RequestClients.as_view(), name="clients_list"),
 ]
