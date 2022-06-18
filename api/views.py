@@ -100,6 +100,7 @@ class RequestClients(View):
                 **data["client"]
             )
         else:
+            status.data["message"] = "invalid keys"
             status.failure()
 
         return status.json
