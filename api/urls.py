@@ -19,5 +19,5 @@ from django.urls import path, include
 import api.views
 
 urlpatterns = [
-    path('clients/', api.views.RequestClients.as_view(), name="clients_list"),
+    path('clients/', api.views.RequestClients.as_view(), name="clients"),
 ]

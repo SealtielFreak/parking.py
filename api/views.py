@@ -11,12 +11,22 @@ import api.models
 class RequestClients(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
+        """
+        Warning!
+        """
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest):
+        data = {}
         clients = list(api.models.Client.objects.values())
+        is_empty = len(clients) == 0
 
-        return JsonResponse({"message": "Success", "clients": f"{clients}"} if not len(clients) == 0 else { "message": "Failure" } )
+        if not is_empty:
+            data["message"] = "success"
+        else:
+            data["message"] = "failure"
+
+        return JsonResponse(data)
 
     def post(self, request: HttpRequest):
         data = request.body
