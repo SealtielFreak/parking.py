@@ -51,7 +51,7 @@ class StatusResponse:
 
 
 class RequestClients(View):
-    CLIENT_KEYS = [
+    keys = {
         "id",
         "first_name",
         "last_name",
@@ -64,14 +64,7 @@ class RequestClients(View):
         "suburb",
         "municipality",
         "int_num"
-    ]
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        """
-        Warning, this method is only for demonstration and debug the api!
-        """
-        return super().dispatch(request, *args, **kwargs)
+    }
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
@@ -94,7 +87,7 @@ class RequestClients(View):
 
         client = data["client"]
 
-        if not (client.keys() - set(self.CLIENT_KEYS)):
+        if not (client.keys() - self.keys):
             status.success()
             api.models.Client.objects.create(
                 client
@@ -107,17 +100,10 @@ class RequestClients(View):
 
 
 class RequestPayment(View):
-    KEYS = [
+    keys = {
         "hours",
         "mobility"
-    ]
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        """
-        Warning, this method is only for demonstration and debug the api!
-        """
-        return super().dispatch(request, *args, **kwargs)
+    }
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
@@ -140,7 +126,7 @@ class RequestPayment(View):
 
         payment = data["payment"]
 
-        if not (payment.keys() - set(self.KEYS)):
+        if not (payment.keys() - self.keys):
             status.success()
             api.models.Payment.objects.create(
                 **payment
@@ -153,7 +139,7 @@ class RequestPayment(View):
 
 
 class RequestTransports(View):
-    KEYS = [
+    keys = {
         "id_client",
         "id_payment",
         "circulation_card",
@@ -163,7 +149,7 @@ class RequestTransports(View):
         "type",
         "time_init",
         "time_final"
-    ]
+    }
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
@@ -186,7 +172,7 @@ class RequestTransports(View):
 
         transport = data["transport"]
 
-        if not (transport.keys() - set(self.KEYS)):
+        if not (transport.keys() - self.keys):
             status.success()
             api.models.Transport.objects.create(
                 **transport
@@ -199,12 +185,12 @@ class RequestTransports(View):
 
 
 class RequestPages(View):
-    KEYS = [
+    keys = {
         "id_transport",
         "total",
         "type",
         "date_page"
-    ]
+    }
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
@@ -227,7 +213,7 @@ class RequestPages(View):
 
         pages = data["page"]
 
-        if not (pages.keys() - set(self.KEYS)):
+        if not (pages.keys() - self.keys):
             status.success()
             api.models.Page.objects.create(
                 **pages
@@ -240,9 +226,9 @@ class RequestPages(View):
 
 
 class RequestBlackList(View):
-    KEYS = [
+    keys = {
         "id_client",
-    ]
+    }
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
@@ -265,7 +251,7 @@ class RequestBlackList(View):
 
         black_list = data["black-list"]
 
-        if not (black_list.keys() - set(self.KEYS)):
+        if not (black_list.keys() - self.keys):
             status.success()
             api.models.BlackList.objects.create(
                 **black_list
