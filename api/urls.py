@@ -19,14 +19,15 @@ from django.views.decorators.csrf import csrf_exempt
 
 import api.views
 
-views_excepts = [
-
-]
 
 urlpatterns = [
-    path('clients/', csrf_exempt(api.views.RequestClients.as_view()), name="clients"),
     path('payments/', csrf_exempt(api.views.RequestPayment.as_view()), name="payments"),
     path('transports/', csrf_exempt(api.views.RequestTransports.as_view()), name="transports"),
     path('pages/', csrf_exempt(api.views.RequestPages.as_view()), name="pages"),
     path('black-list/', csrf_exempt(api.views.RequestBlackList.as_view()), name="black-list"),
+
+    path('clients/', api.views.client.all_list),
+    path('client/all', api.views.client.all_list),
+    path('client/<int:id>', api.views.client.by_id),
+    path('client/', api.views.client.create)
 ]
