@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 
 import api.views
-
+from api.views import client
 
 urlpatterns = [
     path('payments/', csrf_exempt(api.views.RequestPayment.as_view()), name="payments"),
