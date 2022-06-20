@@ -19,26 +19,31 @@ from api.views import client, transport, payment, check, payment_plane, black_li
 
 urlpatterns = [
     path('clients/', client.all_clients),
+    path('client/', client.all_clients),
     path('client/all', client.all_clients),
     path('client/<int:id>', client.client_by_id),
     path('client/', client.create_client),
 
     path('transports/', transport.all_transports),
+    path('transport/', transport.all_transports),
     path('transport/all', transport.all_transports),
     path('transport/<int:id>', transport.transport_by_id),
     path('transport/', transport.create_transport),
 
     path('payments/', payment.all_payments),
+    path('payment/', payment.all_payments),
     path('payment/all', payment.all_payments),
     path('payment/<int:id>', payment.payment_by_id),
     path('payment/', payment.create_payment),
 
     path('payment-planes/', payment_plane.all_payment_pages),
+    path('payment-plane/', payment_plane.all_payment_pages),
     path('payment-plane/all', payment_plane.all_payment_pages),
     path('payment-plane/<int:id>', payment_plane.payment_plane_by_id),
     path('payment-plane/', payment_plane.create_payment_plane),
 
     path('checks/', check.all_checks),
+    path('check/', check.all_checks),
     path('check/all', check.all_checks),
     path('check/<int:id>', check.check_by_id),
     path('check/', check.create_check),
