@@ -3,8 +3,8 @@ from django.http import HttpRequest, JsonResponse, HttpResponseBadRequest, HttpR
 from django.views.decorators.csrf import csrf_exempt
 
 import api.models
-from decode import json_to_dict
-from request import post_request
+from utilities.decode import json_to_dict
+from utilities.request import post_request
 
 CLIENT_FIELDS = {
     field.name for field in api.models.Client._meta.get_fields()
@@ -15,33 +15,39 @@ def all_clients(request: HttpRequest) -> HttpResponse:
     clients = list(api.models.Client.objects.values())
 
     return JsonResponse({
-        "clients": clients
+        "data": clients
     })
 
 
 def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
-    client = model_to_dict(api.models.Client.objects.get(id=id))
+    client = model_to_dict(api.models.Client.objects.get(client_id=id))
 
     return JsonResponse({
-        "client": client
+        "data": client
     })
-
 
 @csrf_exempt
 @post_request
 def create_client(request: HttpRequest) -> HttpResponse:
     client_data = json_to_dict(request.body)
-
-    if client_data:
-        return HttpResponseBadRequest()
-
-    if CLIENT_FIELDS - client_data.keys():
-        return HttpResponseBadRequest()
+    print(client_data["data"])
+    if not client_data["data"]:
+        return HttpResponseBadRequest({
+            "status":"400",
+            "error" : True,
+            "message" : "Error en los parametros enviados!"
+        })
+        
+    # print(CLIENT_FIELDS)
+    # if CLIENT_FIELDS - client_data.keys():
+    #     print("sin todos los campos")
+    #     return HttpResponseBadRequest()
 
     api.models.Client.objects.create(
-        **client_data
+        **client_data["data"]
     )
 
     return JsonResponse({
-        "status": "success"
+        "status": "200",
+        "message" : "Cliente creado con exito!"
     })

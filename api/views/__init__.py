@@ -32,7 +32,9 @@ class StatusResponse:
     def __init__(self):
         self.__data = {
             "status": "unknown",
-            "data": {}
+            "number" : 0,
+            "data" : [],
+            "message" : ""
         }
 
     @property
@@ -40,7 +42,7 @@ class StatusResponse:
         return JsonResponse(self.__data)
 
     @property
-    def data(self) -> dict:
+    def data(self) -> list:
         return self.__data["data"]
 
     def failure(self):
@@ -48,11 +50,20 @@ class StatusResponse:
 
     def success(self):
         self.__data["status"] = "success"
+    
+    def number(self,number):
+        self.__data["number"] = number
+    
+    def send_data(self,data):
+        self.__data["data"] = data
+    
+    def message(self,message):
+        self.__data["message"] = message
 
 
 class RequestClients(View):
     CLIENT_KEYS = [
-        "id",
+        "client_id",
         "first_name",
         "last_name",
         "contact_email",
@@ -91,8 +102,8 @@ class RequestClients(View):
     def post(self, request: HttpRequest):
         status = StatusResponse()
         data = json_decode(request.body)
-
-        client = data["client"]
+        print(request.body)
+        client = data["data"]
 
         if not (client.keys() - set(self.CLIENT_KEYS)):
             status.success()
@@ -100,7 +111,7 @@ class RequestClients(View):
                 client
             )
         else:
-            status.data["message"] = "invalid keys"
+            status.message("invalid keys")
             status.failure()
 
         return status.json
@@ -121,13 +132,13 @@ class RequestPayment(View):
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
-        payments = list(api.models.Payment.objects.values())
+        payments = list(api.models.PaymentPlane.objects.values())
         is_empty = len(payments) == 0
 
         if not is_empty:
             status.success()
-            status.data["number"] = len(payments)
-            status.data["payments"] = payments
+            status.number(len(payments))
+            status.send_data(payments)
         else:
             status.failure()
 
@@ -138,7 +149,7 @@ class RequestPayment(View):
         status = StatusResponse()
         data = json_decode(request.body)
 
-        payment = data["payment"]
+        payment = data["data"]
 
         if not (payment.keys() - set(self.KEYS)):
             status.success()
@@ -154,8 +165,8 @@ class RequestPayment(View):
 
 class RequestTransports(View):
     KEYS = [
-        "id_client",
-        "id_payment",
+        "client",
+        "payment_planes",
         "circulation_card",
         "model",
         "brand",
@@ -172,8 +183,8 @@ class RequestTransports(View):
 
         if not is_empty:
             status.success()
-            status.data["number"] = len(transport)
-            status.data["transport"] = transport
+            status.number(len(transport))
+            status.send_data(transport)
         else:
             status.failure()
 
@@ -184,17 +195,17 @@ class RequestTransports(View):
         status = StatusResponse()
         data = json_decode(request.body)
 
-        transport = data["transport"]
+        transport = data["data"]
+        client = api.models.Client.objects.get(client_id=transport["client"])
+        transport["client"] = client
 
-        if not (transport.keys() - set(self.KEYS)):
-            status.success()
-            api.models.Transport.objects.create(
-                **transport
-            )
-        else:
-            status.data["message"] = "invalid keys"
-            status.failure()
+        plan = api.models.PaymentPlane.objects.get(payment_plane_id=transport["payment_planes"])
+        transport["payment_planes"] = plan
 
+        api.models.Transport.objects.create(
+            **transport
+        )
+        status.success()
         return status.json
 
 
@@ -208,7 +219,7 @@ class RequestPages(View):
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
-        pages = list(api.models.Page.objects.values())
+        pages = list(api.models.Payment.objects.values())
         is_empty = len(pages) == 0
 
         if not is_empty:
