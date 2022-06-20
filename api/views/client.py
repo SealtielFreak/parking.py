@@ -20,7 +20,7 @@ def all_clients(request: HttpRequest) -> HttpResponse:
 
 
 def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
-    client = model_to_dict(api.models.Client.objects.get(id=id))
+    client = model_to_dict(api.models.Client.objects.get(client_id=id))
 
     return JsonResponse({
         "client": client
