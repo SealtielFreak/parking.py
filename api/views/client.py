@@ -3,8 +3,8 @@ from django.http import HttpRequest, JsonResponse, HttpResponseBadRequest, HttpR
 from django.views.decorators.csrf import csrf_exempt
 
 import api.models
-from decode import json_to_dict
-from request import post_request
+from utilities.decode import json_to_dict
+from utilities.request import post_request
 
 CLIENT_FIELDS = {
     field.name for field in api.models.Client._meta.get_fields()
