@@ -40,13 +40,15 @@ class BlackList(Model):
 
 class PaymentPlane(Model):
     payment_plane_id = AutoField(primary_key=True)
+
     hours = IntegerField()
     mobility = CharField(max_length=24)
+
     def __str__(self):
         return f"{self.payment_plane_id}, {self.hours} {self.mobility}"
 
     class Meta:
-        unique_together = ('payment_id', 'mobility')
+        unique_together = ('payment_plane_id', 'mobility')
 
     def __str__(self):
         return f"Mobility: {self.mobility}"

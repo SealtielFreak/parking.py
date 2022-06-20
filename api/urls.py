@@ -13,11 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from django.views.decorators.csrf import csrf_exempt
+from django.urls import path
 
-import api.views
 from api.views import client, transport, payment, check, payment_plane, black_list
 
 urlpatterns = [
@@ -48,6 +45,5 @@ urlpatterns = [
 
     path('black-list/', black_list.all_black_list),
     path('black-list/all', black_list.all_black_list),
-    path('black-list/<int:id>', black_list.black_list_by_id),
     path('black-list/', black_list.create_black_list),
 ]
