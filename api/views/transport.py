@@ -1,11 +1,13 @@
 from django.forms import model_to_dict
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
 
 import api.models
-from utilities.request import get_request
+from utilities.decode import json_to_dict
+from utilities.request import get_request, post_request
 
 TRANSPORT_FIELDS = {
-    field.name for field in api.models.Client._meta.get_fields()
+    field.name for field in api.models.Transport._meta.get_fields()
 }
 
 
@@ -16,12 +18,32 @@ def all_transports(request: HttpRequest) -> HttpResponse:
 
     data["status"] = "success" if transports else "failure"
 
-    if data["status"] == "sucess":
-        data["clients"] = transports
+    if data["status"] == "success":
+        data["data"] = transports
 
     return JsonResponse(data)
 
 
 @get_request
 def transport_by_id(request: HttpRequest, id: int) -> HttpResponse:
-    transports = model_to_dict(api.models.Transport.objects.get(client_id=id))
+    return JsonResponse({
+        "data": model_to_dict(api.models.Client.objects.get(client_id=id))
+    })
+
+
+@csrf_exempt
+@post_request
+def create_transport(request: HttpRequest) -> HttpResponse:
+    transport_data = json_to_dict(request.body)
+
+    if transport_data:
+        return HttpResponseBadRequest()
+
+    api.models.Transport.objects.create(
+        **transport_data
+    )
+
+    return JsonResponse({
+        "status": "success",
+        "data": transport_data
+    })

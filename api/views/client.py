@@ -19,17 +19,15 @@ def all_clients(request: HttpRequest) -> HttpResponse:
     data["status"] = "success" if clients else "failure"
 
     if data["status"] == "success":
-        data["clients"] = clients
+        data["data"] = clients
 
     return JsonResponse(data)
 
 
 @get_request
 def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
-    client = model_to_dict(api.models.Client.objects.get(client_id=id))
-
     return JsonResponse({
-        "client": client
+        "data": model_to_dict(api.models.Client.objects.get(client_id=id))
     })
 
 
@@ -47,5 +45,5 @@ def create_client(request: HttpRequest) -> HttpResponse:
 
     return JsonResponse({
         "status": "success",
-        "client": client_data
+        "data": client_data
     })
