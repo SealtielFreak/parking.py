@@ -26,8 +26,8 @@ urlpatterns = [
     path('pages/', csrf_exempt(api.views.RequestPages.as_view()), name="pages"),
     path('black-list/', csrf_exempt(api.views.RequestBlackList.as_view()), name="black-list"),
 
-    path('clients/', api.views.client.all_list),
-    path('client/all', api.views.client.all_list),
-    path('client/<int:id>', api.views.client.by_id),
-    path('client/', api.views.client.create)
+    path('clients/', api.views.client.all_clients),
+    path('client/all', api.views.client.all_clients),
+    path('client/<int:id>', api.views.client.client_by_id),
+    path('client/', api.views.client.create_client)
 ]

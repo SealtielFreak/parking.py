@@ -1,18 +1,17 @@
-import json
-
 from django.forms import model_to_dict
-from django.http import HttpRequest, JsonResponse
-from django.views import View
+from django.http import HttpRequest, JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 import api.models
+from decode import json_to_dict
+from request import post_request
 
-
-KEYS_FIELDS = {
+CLIENT_FIELDS = {
     field.name for field in api.models.Client._meta.get_fields()
 }
 
-def all_list(request: HttpRequest) -> JsonResponse:
+
+def all_clients(request: HttpRequest) -> HttpResponse:
     clients = list(api.models.Client.objects.values())
 
     return JsonResponse({
@@ -20,7 +19,7 @@ def all_list(request: HttpRequest) -> JsonResponse:
     })
 
 
-def by_id(request: HttpRequest, id: int) -> JsonResponse:
+def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
     client = model_to_dict(api.models.Client.objects.get(id=id))
 
     return JsonResponse({
@@ -28,8 +27,21 @@ def by_id(request: HttpRequest, id: int) -> JsonResponse:
     })
 
 
-# @csrf_exempt
-def create(request: HttpRequest) -> JsonResponse:
+@csrf_exempt
+@post_request
+def create_client(request: HttpRequest) -> HttpResponse:
+    client_data = json_to_dict(request.body)
+
+    if client_data:
+        return HttpResponseBadRequest()
+
+    if CLIENT_FIELDS - client_data.keys():
+        return HttpResponseBadRequest()
+
+    api.models.Client.objects.create(
+        **client_data
+    )
+
     return JsonResponse({
-        "keys": list(KEYS_FIELDS)
+        "status": "success"
     })
