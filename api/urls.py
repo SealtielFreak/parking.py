@@ -32,7 +32,7 @@ urlpatterns = [
     path('client/<int:id>',client.client_by_id),
     path('client', client.create_client),
 
-    path('transports/', transport.all_transports),
-    path('transports/all', transport.all_transports),
-    path('transports/<int:id>', transport.transport_by_id),
+    # path('transports/', transport.all_transports),
+    # path('transports/all', transport.all_transports),
+    # path('transports/<int:id>', transport.transport_by_id),
 ]
