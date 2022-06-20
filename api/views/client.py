@@ -32,16 +32,11 @@ def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
 def create_client(request: HttpRequest) -> HttpResponse:
     client_data = json_to_dict(request.body)
 
-    if client_data:
-        return HttpResponseBadRequest()
-
-    if CLIENT_FIELDS - client_data.keys():
-        return HttpResponseBadRequest()
-
     api.models.Client.objects.create(
         **client_data
     )
 
     return JsonResponse({
-        "status": "success"
+        "status": "success",
+        "client": client_data
     })
