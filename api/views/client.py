@@ -4,26 +4,32 @@ from django.views.decorators.csrf import csrf_exempt
 
 import api.models
 from utilities.decode import json_to_dict
-from utilities.request import post_request
+from utilities.request import post_request, get_request
 
 CLIENT_FIELDS = {
     field.name for field in api.models.Client._meta.get_fields()
 }
 
 
+@get_request
 def all_clients(request: HttpRequest) -> HttpResponse:
+    data = {}
     clients = list(api.models.Client.objects.values())
 
     return JsonResponse({
         "data": clients
     })
 
+    if data["status"] == "success":
+        data["data"] = clients
 
+    return JsonResponse(data)
+
+
+@get_request
 def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
-    client = model_to_dict(api.models.Client.objects.get(client_id=id))
-
     return JsonResponse({
-        "data": client
+        "data": model_to_dict(api.models.Client.objects.get(client_id=id))
     })
 
 @csrf_exempt

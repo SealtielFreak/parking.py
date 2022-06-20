@@ -25,7 +25,7 @@ class Client(Model):
         unique_together = (('client_id', 'first_name', 'last_name', 'birthday_date'),)
 
     def __str__(self):
-        return f"{self.client_id}, {self.first_name} {self.last_name}"
+        return f"ID: {self.client_id}, FirstName: {self.first_name}, LastName: {self.last_name}"
 
 
 class BlackList(Model):
@@ -35,7 +35,7 @@ class BlackList(Model):
     reasons = TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.client.client_id}, {self.client.first_name} {self.client.last_name}"
+        return f"ID: {self.client.client_id}, ID Client: {self.client.client_id}, FirstName: {self.client.first_name}, LastName: {self.client.last_name}"
 
 
 class PaymentPlane(Model):
@@ -45,10 +45,18 @@ class PaymentPlane(Model):
     def __str__(self):
         return f"{self.payment_plane_id}, {self.hours} {self.mobility}"
 
+    class Meta:
+        unique_together = ('payment_id', 'mobility')
+
+    def __str__(self):
+        return f"Mobility: {self.mobility}"
+
 
 class Transport(Model):
-    client = ForeignKey(Client, on_delete=models.CASCADE, null=True)
-    payment_planes = ForeignKey(PaymentPlane, on_delete=models.CASCADE, null=True)
+    transport_id = AutoField(primary_key=True)
+
+    client = ForeignKey(Client, on_delete=models.CASCADE)
+    payment_planes = ForeignKey(PaymentPlane, on_delete=models.CASCADE)
 
     model = CharField(max_length=24)
     brand = CharField(max_length=24)
@@ -72,16 +80,26 @@ class Check(Model):
         ('D', 'Departure'),
     )
 
-    transport = ForeignKey(Transport, on_delete=models.CASCADE, null=True)
+    check_id = AutoField(primary_key=True)
+
+    transport = ForeignKey(Transport, on_delete=models.CASCADE)
     type_check = CharField(max_length=1, choices=TYPE_CHECK)
 
     since = DateTimeField()
     until = DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"ID: {self.check_id}, Transport {self.transport.transport_id}"
+
 
 class Payment(Model):
-    transport = ForeignKey(Transport, on_delete=models.CASCADE, null=True)
+    payment_id = AutoField(primary_key=True)
+
+    transport = ForeignKey(Transport, on_delete=models.CASCADE)
 
     total = DecimalField(max_digits=5, decimal_places=2)
     type = CharField(max_length=255)
     date = DateTimeField()
+
+    def __str__(self):
+        return f"ID: {self.payment_id}, Transport: {self.transport.transport_id}"

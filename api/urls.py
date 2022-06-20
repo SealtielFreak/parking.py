@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 
 import api.views as views
-import api.views.client as client
+from api.views import client, transport
 
 
 urlpatterns = [
@@ -30,5 +30,9 @@ urlpatterns = [
     path('clients', client.all_clients),
     path('client/all', client.all_clients),
     path('client/<int:id>',client.client_by_id),
-    path('client', client.create_client)
+    path('client', client.create_client),
+
+    path('transports/', transport.all_transports),
+    path('transports/all', transport.all_transports),
+    path('transports/<int:id>', transport.transport_by_id),
 ]
