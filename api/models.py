@@ -39,10 +39,11 @@ class BlackList(Model):
 
 
 class PaymentPlane(Model):
-    payment_id = AutoField(primary_key=True)
-
-    hours = TimeField()
+    payment_plane_id = AutoField(primary_key=True)
+    hours = IntegerField()
     mobility = CharField(max_length=24)
+    def __str__(self):
+        return f"{self.payment_plane_id}, {self.hours} {self.mobility}"
 
     class Meta:
         unique_together = ('payment_id', 'mobility')
@@ -57,7 +58,6 @@ class Transport(Model):
     client = ForeignKey(Client, on_delete=models.CASCADE)
     payment_planes = ForeignKey(PaymentPlane, on_delete=models.CASCADE)
 
-    year = DateField(null=True, blank=True)
     model = CharField(max_length=24)
     brand = CharField(max_length=24)
     type = CharField(max_length=24)
@@ -67,8 +67,11 @@ class Transport(Model):
     circulation_card = CharField(max_length=16, null=True, blank=True)
     license = CharField(max_length=24, null=True, blank=True)
 
+    time_init = TimeField()
+    time_final = TimeField()
+
     def __str__(self):
-        return f"ID: {self.transport_id}, Model: {self.model}, Year: {self.year} Brand: {self.brand}"
+        return f"{self.client.client_id}, {self.model} {self.brand}"
 
 
 class Check(Model):
