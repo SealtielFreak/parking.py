@@ -18,19 +18,36 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 
 import api.views
-from api.views import client, transport
+from api.views import client, transport, payment, check, payment_plane, black_list
 
 urlpatterns = [
-    path('payments/', csrf_exempt(api.views.RequestPayment.as_view()), name="payments"),
-    path('pages/', csrf_exempt(api.views.RequestPages.as_view()), name="pages"),
-    path('black-list/', csrf_exempt(api.views.RequestBlackList.as_view()), name="black-list"),
-
     path('clients/', client.all_clients),
     path('client/all', client.all_clients),
     path('client/<int:id>', client.client_by_id),
     path('client/', client.create_client),
 
     path('transports/', transport.all_transports),
-    path('transports/all', transport.all_transports),
-    path('transports/<int:id>', transport.transport_by_id),
+    path('transport/all', transport.all_transports),
+    path('transport/<int:id>', transport.transport_by_id),
+    path('transport/', transport.create_transport),
+
+    path('payments/', payment.all_payments),
+    path('payment/all', payment.all_payments),
+    path('payment/<int:id>', payment.payment_by_id),
+    path('payment/', payment.create_payment),
+
+    path('payment-planes/', payment_plane.all_payment_pages),
+    path('payment-plane/all', payment_plane.all_payment_pages),
+    path('payment-plane/<int:id>', payment_plane.payment_plane_by_id),
+    path('payment-plane/', payment_plane.create_payment_plane),
+
+    path('checks/', check.all_checks),
+    path('check/all', check.all_checks),
+    path('check/<int:id>', check.check_by_id),
+    path('check/', check.create_check),
+
+    path('black-list/', black_list.all_black_list),
+    path('black-list/all', black_list.all_black_list),
+    path('black-list/<int:id>', black_list.black_list_by_id),
+    path('black-list/', black_list.create_black_list),
 ]
