@@ -121,7 +121,7 @@ class RequestPayment(View):
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
-        payments = list(api.models.Payment.objects.values())
+        payments = list(api.models.PaymentPlane.objects.values())
         is_empty = len(payments) == 0
 
         if not is_empty:
@@ -142,7 +142,7 @@ class RequestPayment(View):
 
         if not (payment.keys() - set(self.KEYS)):
             status.success()
-            api.models.Payment.objects.create(
+            api.models.PaymentPlane.objects.create(
                 **payment
             )
         else:
@@ -208,7 +208,7 @@ class RequestPages(View):
 
     def get(self, request: HttpRequest):
         status = StatusResponse()
-        pages = list(api.models.Page.objects.values())
+        pages = list(api.models.Payment.objects.values())
         is_empty = len(pages) == 0
 
         if not is_empty:
@@ -229,7 +229,7 @@ class RequestPages(View):
 
         if not (pages.keys() - set(self.KEYS)):
             status.success()
-            api.models.Page.objects.create(
+            api.models.Payment.objects.create(
                 **pages
             )
         else:
