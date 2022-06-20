@@ -36,7 +36,7 @@ def transport_by_id(request: HttpRequest, id: int) -> HttpResponse:
 def create_transport(request: HttpRequest) -> HttpResponse:
     transport_data = json_to_dict(request.body)
 
-    if transport_data:
+    if not transport_data:
         return HttpResponseBadRequest()
 
     api.models.Transport.objects.create(

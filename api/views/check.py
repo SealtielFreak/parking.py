@@ -36,7 +36,7 @@ def check_by_id(request: HttpRequest, id: int) -> HttpResponse:
 def create_check(request: HttpRequest) -> HttpResponse:
     check_data = json_to_dict(request.body)
 
-    if check_data:
+    if not check_data:
         return HttpResponseBadRequest()
 
     api.models.Check.objects.create(

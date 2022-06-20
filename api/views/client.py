@@ -16,9 +16,7 @@ def all_clients(request: HttpRequest) -> HttpResponse:
     data = {}
     clients = list(api.models.Client.objects.values())
 
-    return JsonResponse({
-        "data": clients
-    })
+    data["status"] = "success" if clients else "failure"
 
     if data["status"] == "success":
         data["data"] = clients
@@ -32,28 +30,21 @@ def client_by_id(request: HttpRequest, id: int) -> HttpResponse:
         "data": model_to_dict(api.models.Client.objects.get(client_id=id))
     })
 
+
 @csrf_exempt
 @require_POST
 def create_client(request: HttpRequest) -> HttpResponse:
     client_data = json_to_dict(request.body)
-    print(client_data["data"])
+
     if not client_data["data"]:
-        return HttpResponseBadRequest({
-            "status":"400",
-            "error" : True,
-            "message" : "Error en los parametros enviados!"
-        })
-        
-    # print(CLIENT_FIELDS)
-    # if CLIENT_FIELDS - client_data.keys():
-    #     print("sin todos los campos")
-    #     return HttpResponseBadRequest()
+        return HttpResponseBadRequest()
 
     api.models.Client.objects.create(
         **client_data["data"]
     )
 
+
     return JsonResponse({
-        "status": "200",
-        "message" : "Cliente creado con exito!"
+        "status": "success",
+        "data": client_data
     })

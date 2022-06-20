@@ -36,7 +36,7 @@ def black_list_by_id(request: HttpRequest, id: int) -> HttpResponse:
 def create_black_list(request: HttpRequest) -> HttpResponse:
     check_data = json_to_dict(request.body)
 
-    if check_data:
+    if not check_data:
         return HttpResponseBadRequest()
 
     api.models.BlackList.objects.create(
