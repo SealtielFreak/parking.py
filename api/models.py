@@ -48,7 +48,7 @@ class PaymentPlane(Model):
         unique_together = ('payment_id', 'mobility')
 
     def __str__(self):
-        return f"ID: {self.payment_id}, Mobility: {self.mobility}"
+        return f"Mobility: {self.mobility}"
 
 
 class Transport(Model):
