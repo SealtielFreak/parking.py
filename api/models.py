@@ -42,8 +42,13 @@ class PaymentPlane(Model):
     hours = TimeField()
     mobility = CharField(max_length=24)
 
+    def __str__(self):
+        return f"{self.mobility}"
+
 
 class Transport(Model):
+    transport_id = AutoField(primary_key=True)
+
     client = ForeignKey(Client, on_delete=models.CASCADE, null=True)
     payment_planes = ForeignKey(PaymentPlane, on_delete=models.CASCADE, null=True)
 
@@ -58,7 +63,7 @@ class Transport(Model):
     license = CharField(max_length=24, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.client.client_id}, {self.model} {self.year} {self.brand}"
+        return f"{self.transport_id}, {self.model} {self.year} {self.brand}"
 
 
 class Check(Model):

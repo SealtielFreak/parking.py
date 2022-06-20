@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 
 import api.views
-from api.views import client
+from api.views import client, transport
 
 urlpatterns = [
     path('payments/', csrf_exempt(api.views.RequestPayment.as_view()), name="payments"),
@@ -26,8 +26,12 @@ urlpatterns = [
     path('pages/', csrf_exempt(api.views.RequestPages.as_view()), name="pages"),
     path('black-list/', csrf_exempt(api.views.RequestBlackList.as_view()), name="black-list"),
 
-    path('clients/', api.views.client.all_clients),
-    path('client/all', api.views.client.all_clients),
-    path('client/<int:id>', api.views.client.client_by_id),
-    path('client/', api.views.client.create_client)
+    path('clients/', client.all_clients),
+    path('client/all', client.all_clients),
+    path('client/<int:id>', client.client_by_id),
+    path('client/', client.create_client),
+
+    path('transports/', transport.all_transports),
+    path('transports/all', transport.all_transports),
+    path('transports/<int:id>', transport.transport_by_id),
 ]
